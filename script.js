@@ -273,3 +273,47 @@
 // getUserData().then((data) => {
 //   console.log(data);
 // });
+
+// function sum(...theArgs) {
+//   let total = 0;
+//   for (const arg of theArgs) {
+//     total += arg;
+//   }
+//   return total;
+// }
+
+// console.log(sum(1, 2, 3, 9, 10));
+
+// function greet(greeting, ...names) {
+//   return `${greeting} ${names.join('|')}`;
+// }
+
+// console.log(greet('Hello:', 'some', 'nazrul', 'sana', 'abdullah'));
+// function Person() {
+//   this.age = 0;
+
+//   setInterval(function () {
+//     thi.age++;
+//     console.log(this);
+//     console.log(this.age);
+//   }, 2000);
+// }
+
+// const p = new Person();
+const myElement = document.getElementById('demo');
+
+function getLocation() {
+  try {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } catch {
+    myElement.innerHTML = err;
+  }
+}
+
+function showPosition(position) {
+  myElement.innerHTML =
+    'Latitude: ' +
+    position.coords.latitude +
+    '<br>Longitude: ' +
+    position.coords.longitude;
+}
