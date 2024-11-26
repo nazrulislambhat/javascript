@@ -1,0 +1,21 @@
+ul {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10rem auto;
+}
+li {
+  list-style-type: none;
+}
+a {
+  color: black;
+  background-color: aquamarine;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
