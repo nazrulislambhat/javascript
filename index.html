@@ -3,10 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Something JavaScript</title>
+    <title>TODO APP</title>
+    <script src="index.js" defer></script>
+    <link href="styles.css" rel="stylesheet" />
   </head>
   <body>
-    <h1>something_to_do_with_javascript.js</h1>
-    <script src="script.js"></script>
+    <h1>TODO APP</h1>
+    <section>
+      <aside class="view">
+        <h2>TODOs</h2>
+        <div class="todos"><ol></ol></div>
+      </aside>
+      <aside class="add">
+        <h2>Add Todo</h2>
+        <form>
+          <div>
+            <label for="title">Todo Title</label>
+            <input id="title" type="text" required />
+          </div>
+          <div>
+            <label for="desc">Todo Description</label>
+            <input id="desc" type="text" required />
+          </div>
+          <div>
+            <button>Save</button>
+          </div>
+        </form>
+      </aside>
+    </section>
   </body>
 </html>

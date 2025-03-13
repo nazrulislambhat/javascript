@@ -1,3 +1,0 @@
-something_to_do_with_javascript.js
-
-check_your_console.log
