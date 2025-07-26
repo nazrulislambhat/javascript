@@ -10,5 +10,3 @@ function welcome() {
 }
 
 welcome();
-]
-some modueagxcgxa ghsfdx
