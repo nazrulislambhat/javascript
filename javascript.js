@@ -31,7 +31,7 @@ const users = [
 
 // const outpur = arr.reduce(function (acc, current) {});
 
-const fullnames = users.map((x) => x.firstName + ' ' + x.lastName);
-console.log(fullnames);
-const aboveEighteen = users.map((x) => x.age > 18);
-console.log(aboveEighteen);
+// const fullnames = users.map((x) => x.firstName + ' ' + x.lastName);
+// console.log(fullnames);
+// const aboveEighteen = users.map((x) => x.age > 18);
+// console.log(aboveEighteen);
