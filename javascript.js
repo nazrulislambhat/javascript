@@ -1,14 +1,16 @@
-const arr = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 55, 43, 12, 34, 5, 44, 32, 23, 34, 54, 56, 54, 45,
-  26, 43, 55, 12, 41, 42, 53, 45, 34, 56, 74,
-];
+// const { use } = require('react');
 
-const users = [
-  { firstName: 'nazrul', lastName: 'islam', age: 34 },
-  { firstName: 'abdullah', lastName: 'islam', age: 2 },
-  { firstName: 'sumaiya', lastName: 'magray', age: 34 },
-  { firstName: 'suwaiba', lastName: 'islam', age: 0 },
-];
+// const arr = [
+//   1, 2, 3, 4, 5, 6, 7, 8, 9, 55, 43, 12, 34, 5, 44, 32, 23, 34, 54, 56, 54, 45,
+//   26, 43, 55, 12, 41, 42, 53, 45, 34, 56, 74,
+// ];
+
+// const users = [
+//   { firstName: 'nazrul', lastName: 'islam', age: 34 },
+//   { firstName: 'abdullah', lastName: 'islam', age: 2 },
+//   { firstName: 'sumaiya', lastName: 'magray', age: 34 },
+//   { firstName: 'suwaiba', lastName: 'islam', age: 0 },
+// ];
 // const double = arr.map(function (x) {
 //   return x * 2;
 // });
@@ -35,3 +37,7 @@ const users = [
 // console.log(fullnames);
 // const aboveEighteen = users.map((x) => x.age > 18);
 // console.log(aboveEighteen);
+// const GITHUB_API = 'https://api.github.com/users/nazrulislambhat';
+
+// const user = fetch(GITHUB_API);
+// console.log(user)
