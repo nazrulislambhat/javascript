@@ -99,11 +99,18 @@ img {
 .woo-price {
   color: #ede7b1;
 }
+
 .single_add_to_cart_button {
+  font-size: 1em !important;
+  color: #1b1f3b !important;
+  text-transform: uppercase !important;
+}
+.woo-price .single_add_to_cart_button {
   font-size: 1em !important;
   color: #7dcfb6 !important;
   text-transform: uppercase !important;
 }
+
 .single_add_to_cart_button:hover {
   scale: 1.05;
 }
@@ -145,6 +152,7 @@ img {
 .dark-scheme .cart-button .badge,
 .dark-scheme .menu li.version span:after {
   background-color: #7dcfb6 !important;
+  color: #1b1f3b !important;
 }
 .btn:not(.-outlined):not(.-flat):not(.-text):not(.-primary):not(
     .-pagination
@@ -206,10 +214,6 @@ input[type='submit']:not(.-outlined):not(.-flat):not(.-text):not(.-primary):not(
   background-color: #ede7b1 !important;
   color: #1b1f3b !important;
   font-weight: bold !important;
-}
-.in-stock:hover {
-  background-color: #7dcfb6 !important;
-  color: #1b1f3b !important;
 }
 .out-of-stock {
   color: #fc5130 !important;
@@ -290,4 +294,20 @@ input[type='submit']:not(.-outlined):not(.-flat):not(.-text):not(.-primary):not(
 }
 .dark-scheme select {
   color: white !important;
+}
+.quantity-down:before {
+  content: '‹';
+  font-size: 2rem !important;
+  display: block;
+  color: white !important;
+}
+.quantity-up:before {
+  content: '›';
+  font-size: 2rem !important;
+  display: block;
+  color: white !important;
+}
+.quantity-down svg,
+.quantity-up svg {
+  display: none !important;
 }

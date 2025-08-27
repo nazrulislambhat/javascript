@@ -33,11 +33,26 @@
 
 // const outpur = arr.reduce(function (acc, current) {});
 
-// const fullnames = users.map((x) => x.firstName + ' ' + x.lastName);
-// console.log(fullnames);
-// const aboveEighteen = users.map((x) => x.age > 18);
-// console.log(aboveEighteen);
-// const GITHUB_API = 'https://api.github.com/users/nazrulislambhat';
+// // const fullnames = users.map((x) => x.firstName + ' ' + x.lastName);
+// // console.log(fullnames);
+// // const aboveEighteen = users.map((x) => x.age > 18);
+// // console.log(aboveEighteen);
+// // const GITHUB_API = 'https://api.github.com/users/nazrulislambhat';
 
-// const user = fetch(GITHUB_API);
-// console.log(user)
+// // const user = fetch(GITHUB_API);
+// // console.log(user)
+
+// let pr = new Promise((resolve, reject) => {
+//   let a = 2 + 2;
+//   if (a == 4) {
+//     resolve('Yes Its Equal');
+//   } else {
+//     reject('Rejected Becasue Its Not True');
+//   }
+// });
+
+// pr.then((message) => {
+//   console.log(message);
+// }).catch((message) => {
+//   console.log(message);
+// });
