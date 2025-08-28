@@ -1,21 +1,23 @@
-const p = new Promise((resolve, reject) => {
+const p1 = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve('Promise is Resolved');
-  }, 5000);
+    resolve('Promise P1 is Resolved');
+  }, 10000);
+});
+const p2 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('Promise P2 is Resolved');
+  }, 20000);
 });
 
 async function handlePromise() {
-  const val = await p;
-  //our js engine was waiting for promise to resolved
-  console.log('before handle promise');
+  console.log('Hello World');
+
+  const val = await p1;
+  console.log('Hello P1');
   console.log(val);
-  console.log('after handle promise');
+
+  const val2 = await p2;
+  console.log('Hello P2');
+  console.log(val2);
 }
 handlePromise();
-
-// function getData() {
-// JS Engine will not wait for the promise to be resolved
-//   p.then((res) => console.log(res));
-//   console.log('getdata funtion');
-// }
-// getData();
