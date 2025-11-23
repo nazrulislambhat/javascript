@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="common.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Nunito:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <h1>🌤 Weather Dashboard</h1>
+
+      <!-- Input Row -->
+      <div class="input-row">
+        <input id="cityInput" type="text" placeholder="Enter city name..." />
+        <button id="fetchBtn">Get Weather</button>
+      </div>
+
+      <!-- Status Message -->
+      <div id="statusMsg" class="status"></div>
+
+      <!-- Cards Grid -->
+      <div class="grid">
+        <!-- Current Weather -->
+        <div class="card" id="weatherCard">
+          <h2>Current Weather</h2>
+          <div class="content" id="weatherContent">No data yet</div>
+        </div>
+
+        <!-- Forecast -->
+        <div class="card" id="forecastCard">
+          <h2>Forecast</h2>
+          <div class="content" id="forecastContent">No data yet</div>
+        </div>
+
+        <!-- Air Quality -->
+        <div class="card" id="aqiCard">
+          <h2>Air Quality (AQI)</h2>
+          <div class="content" id="aqiContent">No data yet</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="weather.js"></script>
+  </body>
+</html>
