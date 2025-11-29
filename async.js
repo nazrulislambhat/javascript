@@ -1,23 +1,17 @@
-const p1 = new Promise((resolve, reject) => {
+const p = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve('Promise P1 is Resolved');
-  }, 1000);
-});
-const p2 = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('Promise P2 is Resolved');
-  }, 20000);
+    resolve('Resolved');
+  }, 10000);
 });
 
-async function handlePromise() {
-  console.log('Hello World');
+// async function handlePromise() {
+//   const value = await p;
+//   console.log(value);
+// }
+// handlePromise();
 
-  const val = await p1;
-  console.log('Hello P1');
-  console.log(val);
-
-  const val2 = await p2;
-  console.log('Hello P2');
-  console.log(val2);
+function getData() {
+  p.then((res) => console.log(res));
+  console.log('Hey');
 }
-handlePromise();
+getData();
