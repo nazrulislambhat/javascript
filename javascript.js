@@ -270,3 +270,11 @@ input.addEventListener('input', (e) => {
   statusEl.innerText = 'Typing...';
   debouncedSearch(value);
 });
+
+const fn = debounce(() => {
+  console.log('API Called2');
+}, 1000);
+
+fn();
+fn();
+fn();
