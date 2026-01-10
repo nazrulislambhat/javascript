@@ -416,28 +416,29 @@
 
 // init();
 
-function once(fn) {
-  let ran = false;
+/* JavaScript Once */
+// function once(fn) {
+//   let ran = false;
 
-  return function (...args) {
-    if (!ran) {
-      ran = false;
-      return fn.apply(this, args);
-    }
-  };
-}
+//   return function (...args) {
+//     if (!ran) {
+//       ran = false;
+//       return fn.apply(this, args);
+//     }
+//   };
+// }
 
-const processPayment = () => {
-  const message = document.getElementById('message');
-  message.innerText = 'Processing Payment...Done!';
-  console.log('Payment API Called');
-};
+// const processPayment = () => {
+//   const message = document.getElementById('message');
+//   message.innerText = 'Processing Payment...Done!';
+//   console.log('Payment API Called');
+// };
 
-const payOnce = once(processPayment);
+// const payOnce = once(processPayment);
 
-const btn = document.getElementById('pay-button');
-btn.addEventListener('click', () => {
-  payOnce();
-  btn.disabled = true;
-  btn.innerText = 'Paid';
-});
+// const btn = document.getElementById('pay-button');
+// btn.addEventListener('click', () => {
+//   payOnce();
+//   btn.disabled = true;
+//   btn.innerText = 'Paid';
+// });
