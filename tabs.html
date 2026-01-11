@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="tabs.css" />
+  </head>
+  <body>
+    <div class="tabs">
+      <div class="tab-buttons" role="tablist" aria-label="Profile Sections">
+        <button
+          class="tab active"
+          role="tab"
+          aria-selected="true"
+          data-tab="profile"
+          aria-controls="panel-1"
+          id="tab-1"
+          tabindex="0"
+        >
+          Profile
+        </button>
+
+        <button
+          class="tab"
+          role="tab"
+          aria-selected="false"
+          data-tab="settings"
+          aria-controls="panel-2"
+          id="tab-2"
+          tabindex="-1"
+        >
+          Settings
+        </button>
+      </div>
+
+      <div class="tab-panels">
+        <div
+          class="tab-panel"
+          role="tabpanel"
+          id="panel-1"
+          aria-labelledby="tab-1"
+          data-panel="profile"
+        >
+          Profile Content
+        </div>
+
+        <div
+          class="tab-panel"
+          role="tabpanel"
+          id="panel-2"
+          aria-labelledby="tab-2"
+          data-panel="settings"
+          hidden
+        >
+          Settings Content
+        </div>
+      </div>
+    </div>
+
+    <script src="tabs.js" defer></script>
+  </body>
+</html>
