@@ -6,6 +6,7 @@
 .tab-buttons {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
   margin-bottom: 10px;
 }
 button {
