@@ -1,33 +1,41 @@
-const tabs = document.querySelectorAll('.tab');
-const panels = document.querySelectorAll('.tab-panel');
+// let buttons = document.querySelectorAll('.tab-button');
+// let panels = document.querySelectorAll('.tab-panel');
 
-tabs.forEach((tab) => {
-  tab.addEventListener('click', () => {
-    const id = tab.dataset.tab;
+// buttons.forEach((button, index) => {
+//   button.addEventListener('click', () => {
+//     //remove active from all buttons
+//     buttons.forEach((btn) => btn.classList.remove('active'));
 
-    // Update tabs
-    tabs.forEach((t) => {
-      const isActive = t === tab;
+//     //remove active from all panels
+//     panels.forEach((panel) => panel.classList.remove('active'));
 
-      t.classList.toggle('active', isActive);
-      t.setAttribute('aria-selected', isActive);
-      t.setAttribute('tabindex', isActive ? '0' : '-1');
-    });
+//     //add to clicked button
+//     button.classList.add('active');
+//     //activate matching panel
 
-    // Update panels
-    panels.forEach((panel) => {
-      const isActive = panel.dataset.panel === id;
+//     panels[index].classList.add('active');
+//   });
+// });
+//WITHOUT RELYING ON DOM ORDER
 
-      panel.classList.toggle('active', isActive);
-      panel.hidden = !isActive;
-    });
-  });
+let buttons = document.querySelectorAll('.tab-button');
+let panels = document.querySelectorAll('.tab-panel');
 
-  // Keyboard activation (Enter / Space)
-  tab.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      tab.click();
-    }
+buttons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const target = button.dataset.tab;
+
+    //remove active from all buttons
+    buttons.forEach((btn) => btn.classList.remove('active'));
+
+    //remove active from all panels
+    panels.forEach((panel) => panel.classList.remove('active'));
+
+    //add to clicked button
+    button.classList.add('active');
+
+    document
+      .querySelector(`.tab-panel[data-panel="${target}"]`)
+      .classList.add('active');
   });
 });
