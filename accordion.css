@@ -1,0 +1,51 @@
+.accordions {
+  margin: 0 auto;
+  box-sizing: border-box;
+  border: 1px solid;
+  max-width: 600px;
+  padding: 3rem;
+}
+
+.accordion {
+  border: 1px solid;
+  margin: 1rem;
+  padding: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.button {
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.accordion .accordion-info {
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.accordion.active .accordion-info {
+  display: block;
+  max-height: 500px;
+  opacity: 1;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.accordion .button::after {
+  content: '▼';
+  float: right;
+  transition: transform 0.3s ease-in-out;
+}
+
+.accordion.active .button::after {
+  content: '▲';
+}
