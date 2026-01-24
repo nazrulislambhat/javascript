@@ -1,0 +1,46 @@
+.modal-wrapper {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  border: 5px solid orangered;
+}
+.modal-wrapper.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body {
+  display: grid;
+  margin: 5rem auto;
+  place-items: center;
+}
+.modal {
+  background: white;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+}
+.close {
+  background-color: orangered;
+  border-radius: 100%;
+  padding: 0.5rem 0.7rem;
+  cursor: pointer;
+  color: wheat;
+  border: none;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+.open {
+  background: none;
+  border: 1px solid goldenrod;
+  background-color: goldenrod;
+  font-weight: 700;
+  color: white;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 1rem;
+}
