@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dropdown - Click Toggle</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 40px;
+      }
+
+      .dropdown {
+        position: relative;
+        width: 200px;
+      }
+
+      .dropdown-btn {
+        width: 100%;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        border: 1px solid #ccc;
+        background: #fff;
+      }
+
+      .dropdown-menu.active {
+        display: block;
+      }
+
+      .dropdown-menu div {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .dropdown-menu div:hover {
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dropdown">
+      <button class="dropdown-btn">Select Option</button>
+      <div class="dropdown-menu">
+        <div>Option 1</div>
+        <div>Option 2</div>
+        <div>Option 3</div>
+      </div>
+    </div>
+
+    <script>
+      const btn = document.querySelector('.dropdown-btn');
+      const menu = document.querySelector('.dropdown-menu');
+
+      btn.addEventListener('click', () => {
+        menu.classList.toggle('active');
+      });
+    </script>
+  </body>
+</html>
