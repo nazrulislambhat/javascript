@@ -1,4 +1,4 @@
-a,
+/* a,
 button,
 input {
   text-decoration: none;
@@ -25,4 +25,25 @@ button {
 button.disabled {
   cursor: not-allowed;
   opacity: 0.6;
+} */
+.container ul {
+  display: flex;
+  border: 1px solid;
+  padding: 20px;
+  align-items: center;
+  z-index: 1;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: transparent;
+  /* height of button + spacing */
+}
+li{
+  list-style-type: none;
+  border: 1px solid;
+  padding: 8px 6px;
+}
+.button {
+  position: absolute;
+  right: 40px;
+  top: 40px;
 }

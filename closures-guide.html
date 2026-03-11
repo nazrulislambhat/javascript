@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Closures — Senior Dev Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #f0c060;
+    --accent2: #60c0f0;
+    --accent3: #c060f0;
+    --green: #60f0a0;
+    --red: #f06080;
+    --text: #d0d0e0;
+    --muted: #606078;
+    --code-bg: #0d0d16;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.7;
+    padding: 0 0 80px;
+  }
+
+  /* HEADER */
+  header {
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(240,192,96,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    max-width: 700px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    max-width: 560px;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  nav a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(240,192,96,0.05);
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 60px 0 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-child { border-bottom: none; }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin: 32px 0 12px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  p {
+    color: var(--text);
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  strong { color: #fff; }
+
+  em { color: var(--accent); font-style: normal; font-weight: 700; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .code-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background: #0f0f1a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-label span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .dot-row { display: flex; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #f06080; }
+  .dot.y { background: #f0c060; }
+  .dot.g { background: #60f0a0; }
+
+  pre {
+    padding: 20px 20px;
+    overflow-x: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
+
+  /* Syntax highlighting via spans */
+  .kw  { color: #c060f0; }   /* keywords */
+  .fn  { color: #60c0f0; }   /* functions */
+  .str { color: #60f0a0; }   /* strings */
+  .cm  { color: #404060; font-style: italic; }  /* comments */
+  .nm  { color: #f0c060; }   /* numbers */
+  .vr  { color: #f0a060; }   /* variables */
+
+  /* CALLOUT BOXES */
+  .callout {
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 0.93rem;
+    border-left: 3px solid;
+  }
+
+  .callout.info {
+    background: rgba(96,192,240,0.07);
+    border-color: var(--accent2);
+    color: #a0d8f0;
+  }
+
+  .callout.warn {
+    background: rgba(240,192,96,0.07);
+    border-color: var(--accent);
+    color: #f0d090;
+  }
+
+  .callout.danger {
+    background: rgba(240,96,128,0.07);
+    border-color: var(--red);
+    color: #f09090;
+  }
+
+  .callout.good {
+    background: rgba(96,240,160,0.07);
+    border-color: var(--green);
+    color: #90e0b0;
+  }
+
+  .callout strong { color: #fff; display: block; margin-bottom: 6px; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* TWO-COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    main { padding: 0 20px; }
+    nav { padding: 16px 20px; }
+    header { padding: 40px 20px; }
+  }
+
+  /* MENTAL MODEL BOX */
+  .mental-model {
+    background: linear-gradient(135deg, #0f0f1e 0%, #131320 100%);
+    border: 1px solid #2a2a45;
+    border-radius: 10px;
+    padding: 28px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mental-model::before {
+    content: '💡';
+    position: absolute;
+    top: 20px; right: 20px;
+    font-size: 24px;
+    opacity: 0.5;
+  }
+
+  .mental-model h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .mental-model p { color: #b0b0c8; margin: 0; }
+
+  /* QUIZ */
+  .quiz-block {
+    background: #0e0e1c;
+    border: 1px solid #252540;
+    border-radius: 10px;
+    padding: 28px;
+    margin: 24px 0;
+  }
+
+  .quiz-block h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .quiz-q { color: #fff; font-weight: 700; margin-bottom: 14px; font-size: 0.95rem; }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+
+  .quiz-opt {
+    background: #131320;
+    border: 1px solid #1e1e35;
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--muted);
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .quiz-opt:hover { border-color: var(--accent3); color: #fff; background: #161628; }
+  .quiz-opt.correct { border-color: var(--green); color: var(--green); background: rgba(96,240,160,0.07); }
+  .quiz-opt.wrong { border-color: var(--red); color: var(--red); background: rgba(240,96,128,0.07); }
+
+  .quiz-feedback {
+    margin-top: 14px;
+    font-size: 0.88rem;
+    font-family: 'IBM Plex Mono', monospace;
+    display: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+  }
+
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(96,240,160,0.1); color: var(--green); }
+  .quiz-feedback.no { background: rgba(240,96,128,0.1); color: var(--red); }
+
+  /* SCOPE DIAGRAM */
+  .scope-viz {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 2;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+
+  .scope-global { color: var(--accent); }
+  .scope-outer  { color: var(--accent2); margin-left: 20px; }
+  .scope-inner  { color: var(--green);   margin-left: 40px; }
+  .scope-arrow  { color: var(--muted);   font-size: 0.75rem; }
+
+  /* PILL BADGE */
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .badge.gotcha { background: rgba(240,96,128,0.15); color: var(--red); border: 1px solid var(--red); }
+  .badge.pattern { background: rgba(96,192,240,0.12); color: var(--accent2); border: 1px solid var(--accent2); }
+  .badge.interview { background: rgba(192,96,240,0.12); color: var(--accent3); border: 1px solid var(--accent3); }
+
+  /* CHEATSHEET */
+  .cheatsheet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .cheat-card {
+    background: #0e0e1c;
+    border: 1px solid #1e1e35;
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .cheat-card h5 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .cheat-card p {
+    font-size: 0.85rem;
+    color: #a0a0c0;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">// JavaScript Deep Dive</div>
+  <h1>Mastering <span>Closures</span></h1>
+  <p class="subtitle">Everything you need to think and speak about closures like a senior engineer.</p>
+</header>
+
+<nav>
+  <a href="#what">What Is A Closure</a>
+  <a href="#scope">Scope Chain</a>
+  <a href="#how">How It Works</a>
+  <a href="#patterns">Real Patterns</a>
+  <a href="#gotchas">Gotchas</a>
+  <a href="#memory">Memory & Perf</a>
+  <a href="#interview">Interview Q&A</a>
+  <a href="#cheatsheet">Cheatsheet</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 — WHAT IS A CLOSURE
+═══════════════════════════════════════════ -->
+<section id="what">
+  <div class="section-num">// 01</div>
+  <h2>What Exactly Is A Closure?</h2>
+
+  <p>A <em>closure</em> is a function that <strong>remembers the variables from the scope where it was created</strong>, even after that scope has finished executing.</p>
+
+  <p>This is not a trick or a quirk — it's a fundamental, intentional feature of JavaScript's design. Every function in JavaScript is a closure. Most of the time you don't notice it. When you do notice it, it becomes one of the most powerful tools you have.</p>
+
+  <div class="mental-model">
+    <h4>Mental Model</h4>
+    <p>Think of a closure as a <strong>function with a backpack</strong>. When a function is created, it packs up all the variables in its surrounding scope into that backpack. Wherever the function goes — passed as a callback, returned, stored in a variable — it carries that backpack with it.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-label">
+      <div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <span>simplest possible closure</span>
+    </div>
+    <pre>
+<span class="kw">function</span> <span class="fn">makeGreeter</span>(name) {
+  <span class="cm">// 'name' lives in makeGreeter's scope</span>
+
+  <span class="kw">return function</span> <span class="fn">greet</span>() {
+    <span class="cm">// greet() closes over 'name' — it remembers it</span>
+    console.<span class="fn">log</span>(<span class="str">`Hello, ${name}!`</span>);
+  };
+}
+
+<span class="kw">const</span> <span class="vr">greetAli</span>  = <span class="fn">makeGreeter</span>(<span class="str">'Ali'</span>);
+<span class="kw">const</span> <span class="vr">greetSara</span> = <span class="fn">makeGreeter</span>(<span class="str">'Sara'</span>);
+
+<span class="fn">greetAli</span>();   <span class="cm">// "Hello, Ali!"</span>
+<span class="fn">greetSara</span>(); <span class="cm">// "Hello, Sara!"</span>
+
+<span class="cm">// makeGreeter has finished running. But greetAli still</span>
+<span class="cm">// remembers 'Ali', and greetSara still remembers 'Sara'.</span>
+<span class="cm">// Each closure has its OWN private copy of 'name'.</span></pre>
+  </div>
+
+  <div class="callout info">
+    <strong>Key Insight</strong>
+    The outer function (<code>makeGreeter</code>) has finished executing — it's gone. But the inner function (<code>greet</code>) keeps the variables alive in memory because it still references them. This is closure.
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 — SCOPE CHAIN
+═══════════════════════════════════════════ -->
+<section id="scope">
+  <div class="section-num">// 02</div>
+  <h2>The Scope Chain — Where JS Looks For Variables</h2>
+
+  <p>When a function needs to find a variable, JavaScript walks <em>up the scope chain</em> — looking first in the local scope, then outward, layer by layer, until it finds it or hits the global scope.</p>
+
+  <div class="scope-viz">
+    <div class="scope-global">🌍 GLOBAL SCOPE</div>
+    <div class="scope-global scope-arrow">   └── can see: everything at global level</div>
+    <br>
+    <div class="scope-global">  function outerFunction() {</div>
+    <div class="scope-outer">  📦 OUTER SCOPE  (has: outerVar)</div>
+    <div class="scope-outer scope-arrow">     └── can see: outerVar + globals</div>
+    <br>
+    <div class="scope-outer">    function innerFunction() {</div>
+    <div class="scope-inner">    🔍 INNER SCOPE  (has: innerVar)</div>
+    <div class="scope-inner scope-arrow">       └── can see: innerVar + outerVar + globals</div>
+    <div class="scope-outer">    }</div>
+    <div class="scope-global">  }</div>
+  </div>
+
+  <p><strong>The chain only goes one direction — inward-out.</strong> Inner functions can see outer scopes. Outer functions cannot see inner scopes.</p>
+
+  <div class="code-block">
+    <div class="code-label">
+      <div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <span>scope chain in action</span>
+    </div>
+    <pre>
+<span class="kw">let</span> <span class="vr">globalVar</span> = <span class="str">'global'</span>;
+
+<span class="kw">function</span> <span class="fn">outer</span>() {
+  <span class="kw">let</span> <span class="vr">outerVar</span> = <span class="str">'outer'</span>;
+
+  <span class="kw">function</span> <span class="fn">inner</span>() {
+    <span class="kw">let</span> <span class="vr">innerVar</span> = <span class="str">'inner'</span>;
+
+    console.<span class="fn">log</span>(innerVar);   <span class="cm">// ✅ found in local scope</span>
+    console.<span class="fn">log</span>(outerVar);   <span class="cm">// ✅ found in outer scope (closure)</span>
+    console.<span class="fn">log</span>(globalVar);  <span class="cm">// ✅ found in global scope</span>
+  }
+
+  <span class="cm">// console.log(innerVar)  // ❌ ReferenceError — outer can't see inner</span>
+  <span class="fn">inner</span>();
+}
+
+<span class="fn">outer</span>();</pre>
+  </div>
+
+  <div class="callout warn">
+    <strong>Why the original example broke</strong>
+    When you defined <code>innerFunction</code> outside of <code>outerFunction</code> and just <em>passed</em> it in, its scope chain was built at the global level. So it could never see <code>outerVar</code>, no matter where it got called. <strong>Scope is set at definition time, not call time.</strong>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 — HOW IT WORKS UNDER THE HOOD
+═══════════════════════════════════════════ -->
+<section id="how">
+  <div class="section-num">// 03</div>
+  <h2>How Closures Work Under The Hood</h2>
+
+  <p>When JavaScript creates a function, it attaches a hidden <strong><code>[[Environment]]</code></strong> property to it — a reference to the scope (called a <em>Lexical Environment</em>) that existed when the function was defined.</p>
+
+  <p>When the outer function finishes, its execution context is popped off the call stack. Normally this would allow its local variables to be garbage collected. But if an inner function still holds a reference to that <code>[[Environment]]</code>, those variables <strong>stay alive in memory</strong>.</p>
+
+  <div class="code-block">
+    <div class="code-label">
+      <div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <span>each call creates a fresh environment</span>
+    </div>
+    <pre>
+<span class="kw">function</span> <span class="fn">makeCounter</span>() {
+  <span class="kw">let</span> <span class="vr">count</span> = <span class="nm">0</span>;  <span class="cm">// private to this invocation</span>
+
+  <span class="kw">return</span> {
+    increment: () => ++<span class="vr">count</span>,
+    decrement: () => --<span class="vr">count</span>,
+    value:     () => <span class="vr">count</span>,
+  };
+}
+
+<span class="kw">const</span> <span class="vr">counterA</span> = <span class="fn">makeCounter</span>(); <span class="cm">// new environment, count = 0</span>
+<span class="kw">const</span> <span class="vr">counterB</span> = <span class="fn">makeCounter</span>(); <span class="cm">// new environment, count = 0</span>
+
+<span class="vr">counterA</span>.<span class="fn">increment</span>(); <span class="cm">// 1</span>
+<span class="vr">counterA</span>.<span class="fn">increment</span>(); <span class="cm">// 2</span>
+<span class="vr">counterB</span>.<span class="fn">increment</span>(); <span class="cm">// 1  ← completely separate count</span>
+
+console.<span class="fn">log</span>(<span class="vr">counterA</span>.<span class="fn">value</span>()); <span class="cm">// 2</span>
+console.<span class="fn">log</span>(<span class="vr">counterB</span>.<span class="fn">value</span>()); <span class="cm">// 1</span></pre>
+  </div>
+
+  <div class="callout good">
+    <strong>Critical Insight</strong>
+    Every call to <code>makeCounter()</code> creates a <strong>brand new Lexical Environment</strong> with its own <code>count</code>. The closures returned from each call share <em>their own</em> environment — not each other's.
+  </div>
+
+  <h3>// Closures share the SAME environment</h3>
+  <p>When multiple closures are created inside the same function call, they all share the <strong>same</strong> Lexical Environment. This is important:</p>
+
+  <div class="code-block">
+    <div class="code-label">
+      <div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <span>shared environment between sibling closures</span>
+    </div>
+    <pre>
+<span class="kw">function</span> <span class="fn">makeWallet</span>(initial) {
+  <span class="kw">let</span> <span class="vr">balance</span> = initial;
+
+  <span class="kw">const</span> <span class="vr">deposit</span>  = (n) => { <span class="vr">balance</span> += n; };
+  <span class="kw">const</span> <span class="vr">withdraw</span> = (n) => { <span class="vr">balance</span> -= n; };
+  <span class="kw">const</span> <span class="vr">check</span>    = ()  => <span class="vr">balance</span>;
+
+  <span class="cm">// deposit, withdraw, and check ALL share the same 'balance'</span>
+  <span class="kw">return</span> { <span class="vr">deposit</span>, <span class="vr">withdraw</span>, <span class="vr">check</span> };
+}
+
+<span class="kw">const</span> <span class="vr">wallet</span> = <span class="fn">makeWallet</span>(<span class="nm">100</span>);
+<span class="vr">wallet</span>.<span class="fn">deposit</span>(<span class="nm">50</span>);   <span class="cm">// balance = 150</span>
+<span class="vr">wallet</span>.<span class="fn">withdraw</span>(<span class="nm">30</span>);  <span class="cm">// balance = 120</span>
+<span class="vr">wallet</span>.<span class="fn">check</span>();        <span class="cm">// 120</span></pre>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 — REAL PATTERNS
+═══════════════════════════════════════════ -->
+<section id="patterns">
+  <div class="section-num">// 04</div>
+  <h2>Real-World Closure Patterns</h2>
+
+  <h3>// 1. Function Factories <span class="badge pattern">pattern</span></h3>
+  <p>Create specialized versions of a general function:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>function factory</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">multiplier</span>(factor) {
+  <span class="kw">return</span> (n) => n * factor;
+}
+
+<span class="kw">const</span> <span class="vr">double</span> = <span class="fn">multiplier</span>(<span class="nm">2</span>);
+<span class="kw">const</span> <span class="vr">triple</span> = <span class="fn">multiplier</span>(<span class="nm">3</span>);
+
+<span class="fn">double</span>(<span class="nm">5</span>);  <span class="cm">// 10</span>
+<span class="fn">triple</span>(<span class="nm">5</span>);  <span class="cm">// 15</span></pre>
+  </div>
+
+  <h3>// 2. Private State (Module Pattern) <span class="badge pattern">pattern</span></h3>
+  <p>Simulate private variables — JavaScript has no <code>private</code> keyword in older code, but closures give you the same thing:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>module pattern</span></div>
+    <pre>
+<span class="kw">const</span> <span class="vr">UserStore</span> = (<span class="kw">function</span>() {
+  <span class="kw">let</span> <span class="vr">_users</span> = [];  <span class="cm">// private — no outside access</span>
+
+  <span class="kw">return</span> {
+    add(user)    { <span class="vr">_users</span>.<span class="fn">push</span>(user); },
+    remove(id)   { <span class="vr">_users</span> = <span class="vr">_users</span>.<span class="fn">filter</span>(u => u.id !== id); },
+    getAll()     { <span class="kw">return</span> [...<span class="vr">_users</span>]; }, <span class="cm">// return copy, not reference</span>
+    count()      { <span class="kw">return</span> <span class="vr">_users</span>.length; },
+  };
+})(); <span class="cm">// IIFE — immediately invoked</span>
+
+<span class="vr">UserStore</span>.<span class="fn">add</span>({ id: <span class="nm">1</span>, name: <span class="str">'Ali'</span> });
+<span class="vr">UserStore</span>.<span class="fn">count</span>(); <span class="cm">// 1</span>
+<span class="vr">UserStore</span>._users;  <span class="cm">// undefined — truly private</span></pre>
+  </div>
+
+  <h3>// 3. Memoization <span class="badge pattern">pattern</span></h3>
+  <p>Cache expensive function results using closure to hold the cache:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>memoize</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">memoize</span>(fn) {
+  <span class="kw">const</span> <span class="vr">cache</span> = <span class="kw">new</span> <span class="fn">Map</span>(); <span class="cm">// closed over by the returned fn</span>
+
+  <span class="kw">return function</span>(...args) {
+    <span class="kw">const</span> <span class="vr">key</span> = JSON.<span class="fn">stringify</span>(args);
+
+    <span class="kw">if</span> (<span class="vr">cache</span>.<span class="fn">has</span>(<span class="vr">key</span>)) {
+      console.<span class="fn">log</span>(<span class="str">'cache hit'</span>);
+      <span class="kw">return</span> <span class="vr">cache</span>.<span class="fn">get</span>(<span class="vr">key</span>);
+    }
+
+    <span class="kw">const</span> <span class="vr">result</span> = <span class="fn">fn</span>(...args);
+    <span class="vr">cache</span>.<span class="fn">set</span>(<span class="vr">key</span>, <span class="vr">result</span>);
+    <span class="kw">return</span> <span class="vr">result</span>;
+  };
+}
+
+<span class="kw">const</span> <span class="vr">expensiveCalc</span> = <span class="fn">memoize</span>((n) => n * n * n);
+<span class="fn">expensiveCalc</span>(<span class="nm">10</span>); <span class="cm">// computed: 1000</span>
+<span class="fn">expensiveCalc</span>(<span class="nm">10</span>); <span class="cm">// cache hit: 1000</span></pre>
+  </div>
+
+  <h3>// 4. Partial Application <span class="badge pattern">pattern</span></h3>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>partial application</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">partial</span>(fn, ...presetArgs) {
+  <span class="kw">return function</span>(...laterArgs) {
+    <span class="kw">return</span> <span class="fn">fn</span>(...presetArgs, ...laterArgs);
+  };
+}
+
+<span class="kw">function</span> <span class="fn">add</span>(a, b, c) { <span class="kw">return</span> a + b + c; }
+
+<span class="kw">const</span> <span class="vr">add10</span> = <span class="fn">partial</span>(add, <span class="nm">10</span>);
+<span class="fn">add10</span>(<span class="nm">5</span>, <span class="nm">3</span>); <span class="cm">// 18  (10 + 5 + 3)</span></pre>
+  </div>
+
+  <h3>// 5. Event Handlers & Callbacks <span class="badge pattern">pattern</span></h3>
+  <p>You use closures every time you write a React <code>onClick</code>, an event listener, or a <code>setTimeout</code>:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>closures in event handlers</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">attachHandler</span>(buttonId, message) {
+  document
+    .<span class="fn">getElementById</span>(buttonId)
+    .<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () => {
+      <span class="cm">// This arrow fn closes over 'message'</span>
+      console.<span class="fn">log</span>(message);
+    });
+}
+
+<span class="fn">attachHandler</span>(<span class="str">'btn-1'</span>, <span class="str">'First button clicked'</span>);
+<span class="fn">attachHandler</span>(<span class="str">'btn-2'</span>, <span class="str">'Second button clicked'</span>);
+<span class="cm">// Each handler remembers its own message</span></pre>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 5 — GOTCHAS
+═══════════════════════════════════════════ -->
+<section id="gotchas">
+  <div class="section-num">// 05</div>
+  <h2>The Gotchas — Where Everyone Gets Burned</h2>
+
+  <h3>// Gotcha #1: The Classic Loop Bug <span class="badge gotcha">gotcha</span> <span class="badge interview">interview</span></h3>
+  <p>This is the <strong>most common closure interview question</strong>. It trips up everyone the first time:</p>
+
+  <div class="two-col">
+    <div>
+      <div class="code-block">
+        <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>❌ broken with var</span></div>
+        <pre>
+<span class="kw">for</span> (<span class="kw">var</span> <span class="vr">i</span> = <span class="nm">0</span>; <span class="vr">i</span> < <span class="nm">3</span>; <span class="vr">i</span>++) {
+  <span class="fn">setTimeout</span>(() => {
+    console.<span class="fn">log</span>(<span class="vr">i</span>);
+  }, <span class="nm">1000</span>);
+}
+<span class="cm">// Prints: 3, 3, 3
+// NOT 0, 1, 2 !</span></pre>
+      </div>
+    </div>
+    <div>
+      <div class="code-block">
+        <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>✅ fixed with let</span></div>
+        <pre>
+<span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="nm">0</span>; <span class="vr">i</span> < <span class="nm">3</span>; <span class="vr">i</span>++) {
+  <span class="fn">setTimeout</span>(() => {
+    console.<span class="fn">log</span>(<span class="vr">i</span>);
+  }, <span class="nm">1000</span>);
+}
+<span class="cm">// Prints: 0, 1, 2 ✅</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <strong>Why This Happens</strong>
+    <code>var</code> is <strong>function-scoped</strong>, not block-scoped. All three callbacks close over the <em>same</em> <code>i</code> variable. By the time the timeouts fire, the loop has finished and <code>i === 3</code>. <code>let</code> creates a <strong>new binding per loop iteration</strong>, so each closure gets its own <code>i</code>.
+  </div>
+
+  <p>The old-school fix before <code>let</code> existed was an IIFE:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>✅ old-school fix using IIFE</span></div>
+    <pre>
+<span class="kw">for</span> (<span class="kw">var</span> <span class="vr">i</span> = <span class="nm">0</span>; <span class="vr">i</span> < <span class="nm">3</span>; <span class="vr">i</span>++) {
+  (<span class="kw">function</span>(<span class="vr">j</span>) {        <span class="cm">// IIFE creates a new scope, capturing j</span>
+    <span class="fn">setTimeout</span>(() => {
+      console.<span class="fn">log</span>(<span class="vr">j</span>);  <span class="cm">// j is a local copy of i</span>
+    }, <span class="nm">1000</span>);
+  })(<span class="vr">i</span>);
+}</pre>
+  </div>
+
+  <h3>// Gotcha #2: Closures Close Over Variables, Not Values <span class="badge gotcha">gotcha</span></h3>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>variable reference vs value</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">example</span>() {
+  <span class="kw">let</span> <span class="vr">x</span> = <span class="nm">10</span>;
+
+  <span class="kw">const</span> <span class="vr">getX</span> = () => <span class="vr">x</span>; <span class="cm">// closes over the VARIABLE x, not the value 10</span>
+
+  <span class="vr">x</span> = <span class="nm">99</span>;               <span class="cm">// mutate x after closure was created</span>
+
+  <span class="kw">return</span> <span class="vr">getX</span>;
+}
+
+<span class="fn">example</span>()();  <span class="cm">// 99, not 10 !</span>
+<span class="cm">// The closure sees the CURRENT value of x when it runs, not when it was defined</span></pre>
+  </div>
+
+  <div class="callout warn">
+    <strong>Rule</strong>
+    Closures capture the <strong>variable binding</strong>, not a snapshot of the value. If the variable changes, the closure sees the new value when it runs.
+  </div>
+
+  <h3>// Gotcha #3: Definition Location vs Call Location <span class="badge gotcha">gotcha</span></h3>
+  <p>This is literally what broke your original code. Worth repeating explicitly:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>where defined ≠ where called</span></div>
+    <pre>
+<span class="kw">let</span> <span class="vr">secret</span> = <span class="str">'outer'</span>;
+
+<span class="kw">function</span> <span class="fn">outer</span>() {
+  <span class="kw">let</span> <span class="vr">secret</span> = <span class="str">'inner'</span>;
+  <span class="fn">logSecret</span>(); <span class="cm">// call from inside outer()</span>
+}
+
+<span class="kw">function</span> <span class="fn">logSecret</span>() {
+  <span class="cm">// defined at global scope — sees global 'secret'</span>
+  console.<span class="fn">log</span>(<span class="vr">secret</span>);
+}
+
+<span class="fn">outer</span>(); <span class="cm">// logs 'outer' — NOT 'inner' !</span>
+<span class="cm">// logSecret was defined globally, so that's its scope</span></pre>
+  </div>
+
+  <h3>// Gotcha #4: this Is Not Closed Over <span class="badge gotcha">gotcha</span></h3>
+
+  <div class="two-col">
+    <div>
+      <div class="code-block">
+        <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>❌ this is lost in regular fn</span></div>
+        <pre>
+<span class="kw">function</span> <span class="fn">Timer</span>() {
+  <span class="kw">this</span>.seconds = <span class="nm">0</span>;
+
+  <span class="fn">setInterval</span>(<span class="kw">function</span>() {
+    <span class="kw">this</span>.seconds++; <span class="cm">// ❌ wrong 'this'</span>
+  }, <span class="nm">1000</span>);
+}</pre>
+      </div>
+    </div>
+    <div>
+      <div class="code-block">
+        <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>✅ arrow fn inherits this</span></div>
+        <pre>
+<span class="kw">function</span> <span class="fn">Timer</span>() {
+  <span class="kw">this</span>.seconds = <span class="nm">0</span>;
+
+  <span class="fn">setInterval</span>(() => {
+    <span class="kw">this</span>.seconds++; <span class="cm">// ✅ correct</span>
+  }, <span class="nm">1000</span>);
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>Arrow Functions & this</strong>
+    Arrow functions don't have their own <code>this</code> — they inherit it from where they were defined. Regular functions get their own <code>this</code> based on how they're called. This is why arrow functions are preferred for callbacks inside methods.
+  </div>
+
+  <!-- QUIZ 1 -->
+  <div class="quiz-block">
+    <h4>// Quick Check</h4>
+    <p class="quiz-q">What does this print?<br><code style="font-size:0.82rem; color: #a0c8e8;">for (var i = 0; i &lt; 3; i++) { setTimeout(() => console.log(i), 0); }</code></p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="quiz(this, false)">0, 1, 2</button>
+      <button class="quiz-opt" onclick="quiz(this, true)">3, 3, 3</button>
+      <button class="quiz-opt" onclick="quiz(this, false)">0, 0, 0</button>
+      <button class="quiz-opt" onclick="quiz(this, false)">undefined</button>
+    </div>
+    <div class="quiz-feedback" id="qf1"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 6 — MEMORY
+═══════════════════════════════════════════ -->
+<section id="memory">
+  <div class="section-num">// 06</div>
+  <h2>Memory, Performance & Leaks</h2>
+
+  <p>Closures keep their outer scope alive in memory. This is a feature — but it becomes a <strong>memory leak</strong> when you hold references longer than needed.</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>❌ memory leak example</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">attachHandler</span>() {
+  <span class="kw">const</span> <span class="vr">hugeData</span> = <span class="kw">new</span> <span class="fn">Array</span>(<span class="nm">1000000</span>).<span class="fn">fill</span>(<span class="str">'x'</span>); <span class="cm">// 1MB of data</span>
+
+  document.<span class="fn">getElementById</span>(<span class="str">'btn'</span>).<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () => {
+    console.<span class="fn">log</span>(<span class="str">'clicked'</span>);
+    <span class="cm">// This closure keeps hugeData alive FOREVER</span>
+    <span class="cm">// even though we never use hugeData here!</span>
+  });
+}
+
+<span class="cm">// Fix: only close over what you actually need</span>
+<span class="kw">function</span> <span class="fn">attachHandlerFixed</span>() {
+  <span class="kw">const</span> <span class="vr">hugeData</span> = <span class="kw">new</span> <span class="fn">Array</span>(<span class="nm">1000000</span>).<span class="fn">fill</span>(<span class="str">'x'</span>);
+  <span class="kw">const</span> <span class="vr">summary</span> = <span class="vr">hugeData</span>.length; <span class="cm">// extract only what you need</span>
+  <span class="vr">hugeData</span> = <span class="kw">null</span>; <span class="cm">// allow GC to clean up</span>
+
+  document.<span class="fn">getElementById</span>(<span class="str">'btn'</span>).<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () => {
+    console.<span class="fn">log</span>(<span class="vr">summary</span>); <span class="cm">// only closes over 'summary'</span>
+  });
+}</pre>
+  </div>
+
+  <div class="callout warn">
+    <strong>Rule of Thumb</strong>
+    Only close over what you actually use. If a closure captures a large object but only needs one property from it, extract that property first and close over the small value instead.
+  </div>
+
+  <h3>// When to be careful</h3>
+  <p>Watch for closures in these scenarios: event listeners on long-lived DOM elements, setInterval callbacks that are never cleared, caches that grow without bounds, and closures stored in global variables.</p>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 7 — INTERVIEW Q&A
+═══════════════════════════════════════════ -->
+<section id="interview">
+  <div class="section-num">// 07</div>
+  <h2>Senior Dev Interview Q&A</h2>
+
+  <h3>// Q: "What is a closure?"</h3>
+  <div class="mental-model">
+    <h4>Senior Answer</h4>
+    <p>"A closure is a function that retains access to its outer lexical scope even after the outer function has returned. In JavaScript, every function is technically a closure because they all have a <code>[[Environment]]</code> reference. The practical value is that closures let you create private state, factory functions, and callbacks that carry context — things like memoization, the module pattern, and event handlers all rely on closures."</p>
+  </div>
+
+  <h3>// Q: "What's the difference between closure and scope?"</h3>
+  <div class="mental-model">
+    <h4>Senior Answer</h4>
+    <p>"Scope is the set of rules that determine where a variable is accessible — it's a static concept defined by where code is written. Closure is the mechanism by which a function retains access to variables from its outer scope even after that scope's execution context is gone. Scope defines what's visible; closure is what makes that visibility persist."</p>
+  </div>
+
+  <h3>// Q: "What will this print?" <span class="badge interview">live coding</span></h3>
+
+  <div class="quiz-block">
+    <h4>// What does this output?</h4>
+    <pre style="background:#0d0d18; border-radius:6px; padding:16px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; color:#c0c0e0; margin-bottom:16px; overflow-x:auto;">
+<span class="kw">function</span> <span class="fn">makeAdder</span>(x) {
+  <span class="kw">return</span> (y) => x + y;
+}
+<span class="kw">const</span> <span class="vr">add5</span> = <span class="fn">makeAdder</span>(<span class="nm">5</span>);
+console.<span class="fn">log</span>(<span class="fn">add5</span>(<span class="nm">3</span>));</pre>
+    <p class="quiz-q">What does <code>add5(3)</code> return?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="quiz2(this, false)">3</button>
+      <button class="quiz-opt" onclick="quiz2(this, false)">5</button>
+      <button class="quiz-opt" onclick="quiz2(this, true)">8</button>
+      <button class="quiz-opt" onclick="quiz2(this, false)">undefined</button>
+    </div>
+    <div class="quiz-feedback" id="qf2"></div>
+  </div>
+
+  <h3>// Q: "How would you implement a once() function?"</h3>
+  <p>A function that only executes once no matter how many times it's called — a classic closure pattern used in real codebases:</p>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>once() — senior implementation</span></div>
+    <pre>
+<span class="kw">function</span> <span class="fn">once</span>(fn) {
+  <span class="kw">let</span> <span class="vr">called</span> = <span class="kw">false</span>;
+  <span class="kw">let</span> <span class="vr">result</span>;
+
+  <span class="kw">return function</span>(...args) {
+    <span class="kw">if</span> (!<span class="vr">called</span>) {
+      <span class="vr">called</span> = <span class="kw">true</span>;
+      <span class="vr">result</span> = <span class="fn">fn</span>.<span class="fn">apply</span>(<span class="kw">this</span>, args); <span class="cm">// preserve 'this' context</span>
+    }
+    <span class="kw">return</span> <span class="vr">result</span>; <span class="cm">// always return the same result</span>
+  };
+}
+
+<span class="kw">const</span> <span class="vr">init</span> = <span class="fn">once</span>(() => console.<span class="fn">log</span>(<span class="str">'initialized!'</span>));
+<span class="fn">init</span>(); <span class="cm">// "initialized!"</span>
+<span class="fn">init</span>(); <span class="cm">// nothing</span>
+<span class="fn">init</span>(); <span class="cm">// nothing</span></pre>
+  </div>
+
+  <h3>// Q: "Explain the loop + setTimeout bug and three ways to fix it"</h3>
+
+  <div class="code-block">
+    <div class="code-label"><div class="dot-row"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span>3 fixes — know all three</span></div>
+    <pre>
+<span class="cm">// Fix 1: Use let (modern, preferred)</span>
+<span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="nm">0</span>; <span class="vr">i</span> < <span class="nm">3</span>; <span class="vr">i</span>++) {
+  <span class="fn">setTimeout</span>(() => console.<span class="fn">log</span>(<span class="vr">i</span>), <span class="nm">0</span>);
+}
+
+<span class="cm">// Fix 2: IIFE (pre-ES6 classic)</span>
+<span class="kw">for</span> (<span class="kw">var</span> <span class="vr">i</span> = <span class="nm">0</span>; <span class="vr">i</span> < <span class="nm">3</span>; <span class="vr">i</span>++) {
+  (<span class="kw">function</span>(<span class="vr">j</span>) {
+    <span class="fn">setTimeout</span>(() => console.<span class="fn">log</span>(<span class="vr">j</span>), <span class="nm">0</span>);
+  })(<span class="vr">i</span>);
+}
+
+<span class="cm">// Fix 3: bind or factory</span>
+<span class="kw">for</span> (<span class="kw">var</span> <span class="vr">i</span> = <span class="nm">0</span>; <span class="vr">i</span> < <span class="nm">3</span>; <span class="vr">i</span>++) {
+  <span class="fn">setTimeout</span>(console.<span class="fn">log</span>.<span class="fn">bind</span>(<span class="kw">null</span>, <span class="vr">i</span>), <span class="nm">0</span>);
+}</pre>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 8 — CHEATSHEET
+═══════════════════════════════════════════ -->
+<section id="cheatsheet">
+  <div class="section-num">// 08</div>
+  <h2>The Closure Cheatsheet</h2>
+
+  <div class="cheatsheet-grid">
+    <div class="cheat-card">
+      <h5>Definition</h5>
+      <p>A function that retains access to its outer lexical scope after the outer function has returned.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>Scope is lexical</h5>
+      <p>Determined by WHERE code is written, not where it's called. Defined at creation time, not call time.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>Captures variables, not values</h5>
+      <p>Closures hold a reference to the variable binding. If the variable changes, the closure sees the new value.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>Each call = new environment</h5>
+      <p>Every invocation of the outer function creates a brand-new, independent Lexical Environment.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>var vs let in loops</h5>
+      <p><code>var</code> is function-scoped → all closures share one variable. <code>let</code> is block-scoped → each iteration gets its own binding.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>this is NOT closed over</h5>
+      <p>Regular functions get their own <code>this</code>. Arrow functions inherit <code>this</code> from where they were defined.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>Memory implications</h5>
+      <p>Closed-over variables stay in memory as long as the closure exists. Only capture what you actually need.</p>
+    </div>
+    <div class="cheat-card">
+      <h5>Common patterns</h5>
+      <p>Module pattern, function factories, memoization, partial application, once(), event handler callbacks.</p>
+    </div>
+  </div>
+
+  <div class="callout good" style="margin-top: 32px;">
+    <strong>You Now Think In Closures</strong>
+    Every callback you write is a closure. Every React hook relies on closures. Every time you write a function inside a function, you're using closures. They're not a special trick — they're the everyday fabric of JavaScript.
+  </div>
+</section>
+
+</main>
+
+<script>
+  function quiz(btn, correct) {
+    const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.disabled = true);
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    const fb = document.getElementById('qf1');
+    fb.textContent = correct
+      ? '✅ Correct! var is function-scoped so all callbacks share the same i. By the time they fire, i === 3.'
+      : '❌ Not quite. var is function-scoped — all three closures share the same i. When the loop ends, i === 3, so all three print 3.';
+    fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'no');
+  }
+
+  function quiz2(btn, correct) {
+    const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.disabled = true);
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    const fb = document.getElementById('qf2');
+    fb.textContent = correct
+      ? '✅ Correct! add5 closes over x=5. When called with y=3, it returns 5+3 = 8.'
+      : '❌ add5 closes over x=5 from makeAdder(5). Calling add5(3) returns x + y = 5 + 3 = 8.';
+    fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'no');
+  }
+</script>
+
+</body>
+</html>

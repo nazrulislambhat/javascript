@@ -2,16 +2,17 @@ function outerFunction() {
   let outerVar = 'Outer Function Var';
 
   function innerFunction() {
-    let innerVar = 'Innter Function Var';
-    console.log(innerVar);
-    console.log(outerVar);
+    // ✅ defined inside, so it closes over outerVar
+    let innerVar = 'Inner Function Var';
+    console.log(innerVar); // "Inner Function Var"
+    console.log(outerVar); // "Outer Function Var" ✅
   }
 
-  return innerFunction;
+  innerFunction(); // call it from inside
 }
 
-const closureFunction = outerFunction();
-closureFunction();
+outerFunction();
+
 //EXPLANATION
 //outerFunction runs and returns innerFunction
 //closureFunction holds the returned innterFunction
@@ -20,59 +21,59 @@ closureFunction();
 
 //EXAMPLE 2
 
-function createCounter() {
-  let count = 0;
+// function createCounter() {
+//   let count = 0;
 
-  return function () {
-    count++;
-    console.log(count);
-  };
-}
+//   return function () {
+//     count++;
+//     console.log(count);
+//   };
+// }
 
-createCounter();
-// counter();
-// counter();
-//EXPLAIN
-//createCounter runs & returns a function. The returned function still has access to count() due to closure. Count is preserved between calls - it doesnt reset.
+// createCounter();
+// // counter();
+// // counter();
+// //EXPLAIN
+// //createCounter runs & returns a function. The returned function still has access to count() due to closure. Count is preserved between calls - it doesnt reset.
 
-//TIMER WITH START AND STOP & RESET
-function createTimer() {
-  let time = 0;
-  let intervalId = null;
-  return {
-    start: function () {
-      if (intervalId === null) {
-        console.log('Timer Started!');
-        intervalId = setInterval(() => {
-          time++;
-          console.log(`Time: ${time}`);
-        }, 1000);
-      }
-    },
-    stop: function () {
-      console.log('Timer Stopped');
-      clearInterval(intervalId);
-      intervalId = null;
-    },
-    reset: function () {
-      console.log('Timer Reset!');
-      clearInterval(intervalId);
-      time = 0;
-      intervalId = null;
-    },
-    getTime: function () {
-      console.log(`Time is: ${time}`);
-      return time;
-    },
-  };
-}
+// //TIMER WITH START AND STOP & RESET
+// function createTimer() {
+//   let time = 0;
+//   let intervalId = null;
+//   return {
+//     start: function () {
+//       if (intervalId === null) {
+//         console.log('Timer Started!');
+//         intervalId = setInterval(() => {
+//           time++;
+//           console.log(`Time: ${time}`);
+//         }, 1000);
+//       }
+//     },
+//     stop: function () {
+//       console.log('Timer Stopped');
+//       clearInterval(intervalId);
+//       intervalId = null;
+//     },
+//     reset: function () {
+//       console.log('Timer Reset!');
+//       clearInterval(intervalId);
+//       time = 0;
+//       intervalId = null;
+//     },
+//     getTime: function () {
+//       console.log(`Time is: ${time}`);
+//       return time;
+//     },
+//   };
+// }
 
-const myTimer = createTimer();
+// const myTimer = createTimer();
 
-myTimer.start();
+// myTimer.start();
 
-setTimeout(() => {
-  myTimer.stop();
-}, 8000);
-setTimeout(() => myTimer.getTime(), 5000); // Stops after 5 seconds
-setTimeout(() => myTimer.reset(), 6000);
+// setTimeout(() => {
+//   myTimer.stop();
+// }, 8000);
+// setTimeout(() => myTimer.getTime(), 5000); // Stops after 5 seconds
+// setTimeout(() => myTimer.reset(), 6000);
