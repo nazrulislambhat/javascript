@@ -126,19 +126,68 @@
 //   .then((result) => console.log(result)) // 'p3 worked ✅'
 //   .catch((err) => console.log('All failed:', err.errors));
 
-const p1 = new Promise((_, reject) =>
-  setTimeout(() => reject(new Error('p1 failed')), 300),
-);
-const p2 = new Promise((_, reject) =>
-  setTimeout(() => reject(new Error('p2 failed')), 500),
-);
-const p3 = new Promise((_, reject) =>
-  setTimeout(() => reject(new Error('p3 failed')), 800),
-);
+// const p1 = new Promise((_, reject) =>
+//   setTimeout(() => reject(new Error('p1 failed')), 300),
+// );
+// const p2 = new Promise((_, reject) =>
+//   setTimeout(() => reject(new Error('p2 failed')), 500),
+// );
+// const p3 = new Promise((_, reject) =>
+//   setTimeout(() => reject(new Error('p3 failed')), 800),
+// );
 
-Promise.any([p1, p2, p3])
-  .then((result) => console.log(result)) // ❌ never runs
-  .catch((err) => {
-    console.log(err.constructor.name); // "AggregateError" — not a regular Error!
-    console.log(err.errors); // [Error: p1 failed, Error: p2 failed, Error: p3 failed]
-  });
+// Promise.any([p1, p2, p3])
+//   .then((result) => console.log(result)) // ❌ never runs
+//   .catch((err) => {
+//     console.log(err.constructor.name); // "AggregateError" — not a regular Error!
+//     console.log(err.errors); // [Error: p1 failed, Error: p2 failed, Error: p3 failed]
+//   });
+
+// function createIterator(arr) {
+//   let index = 0;
+//   return {
+//     next() {
+//       if (index < arr.length) {
+//         return { value: arr[index++], done: false };
+//       } else {
+//         return { value: undefined, done: true };
+//       }
+//     },
+//   };
+// }
+
+// const iterator = createIterator([10, 20, 30, 40]);
+
+// console.log(iterator.next());
+// console.log(iterator.next());
+// console.log(iterator.next());
+// console.log(iterator.next());
+// console.log(iterator.next());
+
+function createPaginator(data, pageSize) {
+  let page = 0;
+  return {
+    next() {
+      const start = page * pageSize;
+      const end = start + pageSize;
+      const chunk = data.slice(start, end);
+      page++;
+
+      if (chunk.length > 0) {
+        return { value: chunk, done: false };
+      } else {
+        return { value: undefined, done: true };
+      }
+    },
+  };
+}
+
+const users = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+const pager = createPaginator(users, 2);
+
+console.log(pager.next().value);
+console.log(pager.next().value);
+console.log(pager.next().value);
+console.log(pager.next().value);
+console.log(pager.next().value);
